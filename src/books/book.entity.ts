@@ -1,4 +1,4 @@
-import { User } from "src/auth/user.entity";
+import { User } from "src/user/user.entity";
 import { Column, Entity, IsNull, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { BookGenre } from "./enum/book-genre-enum";
 

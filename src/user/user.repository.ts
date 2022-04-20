@@ -7,7 +7,6 @@ import { EntityRepository, Repository } from 'typeorm';
 import { User } from './user.entity';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
-import { Roles } from './enums/role.enum';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
@@ -19,7 +18,7 @@ export class UserRepository extends Repository<User> {
 
     const user = this.create({
       name,
-      email:email.toLowerCase(),
+      email,
       password: hashedPassword,
       address,
       role,
@@ -27,14 +26,9 @@ export class UserRepository extends Repository<User> {
     try {
       await this.save(user);
     } catch (error) {
-      console.log(error); // NOTE: always remove this statement
-      // NOTE: for single line conditionals, remove the {}
-      if (error.code === '23505') {
-        //duplicate username
+      if (error.code === '23505')
         throw new ConflictException('Email already exists');
-      } else {
-        throw new InternalServerErrorException();
-      }
+      else throw new InternalServerErrorException();
     }
   }
 }

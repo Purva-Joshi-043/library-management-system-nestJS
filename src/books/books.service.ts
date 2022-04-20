@@ -1,8 +1,9 @@
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from 'src/auth/auth.service';
-import { User } from 'src/auth/user.entity';
-import { UserRepository } from 'src/auth/user.repository';
+import { User } from 'src/user/user.entity';
+import { UserRepository } from 'src/user/user.repository';
+import { UserService } from 'src/user/user.service';
 import { Book } from './book.entity';
 import { BooksRepository } from './books.repository';
 import { AddBookDto } from './dto/add-book.dto';
@@ -14,26 +15,22 @@ import { ReturnBookDto } from './dto/return-book.dto';
 export class BooksService {
   constructor(
     @InjectRepository(BooksRepository) // NOTE: remove InjectRepository
-    private booksRepository: BooksRepository, // NOTE: use readonly
+    private readonly booksRepository: BooksRepository,
 
-    private authService: AuthService,
+    private readonly userService: UserService,
   ) {}
 
-  getBooks(filterDto: GetBookFilterDto, user: User): Promise<Book[]> {
-    return this.booksRepository.getBooks(filterDto, user);
+  async getBooks(filterDto: GetBookFilterDto, user: User): Promise<Book[]> {
+    return await this.booksRepository.getBooks(filterDto, user);
   }
 
   async getBookById(id: string): Promise<Book> {
-    try {
-      const found = await this.booksRepository.findOne({ where: { id } });
-      if (!found) {
-        throw new NotFoundException(`Book with ID "${id}" not found`);
-      }
-      return found;
-    } catch (error) {
+    const found = await this.booksRepository.findOne({ where: { id } });
+    if (!found) {
       throw new NotFoundException(`Book with ID "${id}" not found`);
     }
-    // NOTE: remove try..catch if conditionals are already in use
+    return found;
+
   }
 
   addBook(addBookDto: AddBookDto): Promise<Book> {
@@ -51,7 +48,7 @@ export class BooksService {
     const { bookId, userId } = issueBookDto;
     const book = await this.booksRepository.findOne({
       where: { id: bookId },
-      relations: ['issuedTo'],
+      relations: ['issuedTo'],//NOTE:
     });
 
     if (!book) {
@@ -62,7 +59,7 @@ export class BooksService {
         `Book with ID "${bookId}" is already issued by someone else`,
       );
     }
-    const user = await this.authService.getUser(userId);
+    const user = await this.userService.getUser(userId);
 
     book.issuedTo = user;
     await this.booksRepository.save(book);
@@ -73,10 +70,10 @@ export class BooksService {
   async returnBook(returnBookDto: ReturnBookDto): Promise<Book> {
     const { bookId, userId } = returnBookDto;
     const book = await this.booksRepository.findOne({
-      where: { id:bookId },
-      relations: ['issuedTo'], // NOTE: this field is not required
+      where: { id: bookId },
+      relations: ['issuedTo'], 
     });
-    console.log(book); // NOTE: remove loggin the raw data
+  
     if (!book) {
       throw new NotFoundException(`Book with ID "${bookId}" not found`);
     }

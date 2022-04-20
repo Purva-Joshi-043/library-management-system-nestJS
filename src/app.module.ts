@@ -4,6 +4,7 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { configValidationSchema } from './config.schema';
 import { BooksModule } from './books/books.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -27,7 +28,9 @@ import { BooksModule } from './books/books.module';
     }),
   
     AuthModule,
+    UserModule,
     BooksModule,
+    
   ],
 })
 export class AppModule {}

@@ -1,5 +1,5 @@
 import { InternalServerErrorException } from "@nestjs/common";
-import { User } from "src/auth/user.entity";
+import { User } from "src/user/user.entity";
 import { EntityRepository, Repository } from "typeorm";
 import { BookGenre } from "./enum/book-genre-enum";
 import { Book } from "./book.entity";
