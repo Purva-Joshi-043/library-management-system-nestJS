@@ -6,4 +6,5 @@ export class IssueBookDto {
 
   @IsNotEmpty()
   userId: string;
+  // NOTE: use IsString()
 }

@@ -7,5 +7,5 @@ export enum BookGenre{
     MYSTERY = 'MYSTERY',
     BIOGRAPHY = 'BIOGRAPHY',
     HORROR = 'HORROR'
-
+// NOTE: Enum values must be small
 }

@@ -7,7 +7,7 @@ export class AddBookDto {
 
   @IsNotEmpty()
   author: string;
-
+// NOTE: use IsString()
   @IsNotEmpty()
   @IsEnum(BookGenre)
   genre: BookGenre;

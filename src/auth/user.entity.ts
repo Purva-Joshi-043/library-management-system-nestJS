@@ -16,15 +16,15 @@ export class User {
   email: string;
 
   @Column()
-  
+  // NOTE: remove blank line
   password: string;
 
   @Column({ nullable: true })
   address: string;
 
   @Column()
-  role: Roles;
+  role: Roles; // NOTE: use Roles[]
 
-  @OneToMany((type) => Book, (book) => book.issuedTo, { eager: true })
+  @OneToMany((type) => Book, (book) => book.issuedTo, { eager: true }) 
   books: Book[];
 }
