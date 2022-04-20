@@ -20,11 +20,12 @@ import { User } from './user.entity';
 import { GetUser } from './decorators/get-user.decorator';
 
 @Controller('auth')
+  // NOTE: use await in function calls
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) {} // NOTE: use readonly
   @Post('/signup')
   async signup(@Body() createUserDto: CreateUserDto): Promise<void> {
-    return this.authService.signup(createUserDto);
+    return this.authService.signup(createUserDto); // NOTE: use await
   }
   @Post('/signin')
   async signIn(
@@ -33,9 +34,9 @@ export class AuthController {
     return this.authService.signIn(authCredentialsDto);
   }
 
-  @UseGuards(AuthGuard(), RoleGuard)
+  @UseGuards(AuthGuard(), RoleGuard) // NOTE: create custom guard instead of AuthGuard()
   @RolesDecorator(Roles.ADMIN)
-  @Get('/get-user/:id')
+  @Get('/get-user/:id') // NOTE: this route should not be inside auth controller
   getUser(@Param('id') id: string): Promise<User> {
     return this.authService.getUser(id);
   }
@@ -47,7 +48,7 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard(), RoleGuard)
-  @Patch('/update-profile')
+  @Patch('/update-profile') // NOTE: this route shoud not be in this controller
   updateProfile(
     @Body() updateUserDto: UpdateUserDto,
     @GetUser() user:User,
@@ -57,7 +58,7 @@ export class AuthController {
 
   @RolesDecorator(Roles.ADMIN)
   @UseGuards(AuthGuard(), RoleGuard)
-  @Patch('/:id/update-userrole')
+  @Patch('/:id/update-userrole') // NOTE: change the url path to update-role
   updateUserRole(
     @Body() updateUserRoleDto: UpdateUserRoleDto,
     @Param('id') id: string,

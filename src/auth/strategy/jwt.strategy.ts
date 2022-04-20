@@ -10,13 +10,14 @@ import { UserRepository } from '../user.repository';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    @InjectRepository(UserRepository)
-    private usersRepository: UserRepository,
+    @InjectRepository(UserRepository) // NOTE: remove InjectRepository
+    private usersRepository: UserRepository, // NOTE: make readonly
     private configService: ConfigService,
   ) {
     super({
       secretOrKey: configService.get('JWT_SECRET'),
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      // NOTE: use ignoreExpirationDate
     });
   }
 
@@ -24,7 +25,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     const { email } = payload;
     const user: User = await this.usersRepository.findOne({ email });
     if (!user) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException();// NOTE: use custom message
     }
     return user;
   }

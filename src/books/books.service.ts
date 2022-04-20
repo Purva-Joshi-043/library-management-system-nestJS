@@ -10,10 +10,11 @@ import { GetBookFilterDto } from './dto/get-book-filter.dto';
 import { IssueBookDto } from './dto/issue-book.dto';
 import { ReturnBookDto } from './dto/return-book.dto';
 
+// NOTE: use await
 export class BooksService {
   constructor(
-    @InjectRepository(BooksRepository)
-    private booksRepository: BooksRepository,
+    @InjectRepository(BooksRepository) // NOTE: remove InjectRepository
+    private booksRepository: BooksRepository, // NOTE: use readonly
 
     private authService: AuthService,
   ) {}
@@ -28,11 +29,11 @@ export class BooksService {
       if (!found) {
         throw new NotFoundException(`Book with ID "${id}" not found`);
       }
-
       return found;
     } catch (error) {
       throw new NotFoundException(`Book with ID "${id}" not found`);
     }
+    // NOTE: remove try..catch if conditionals are already in use
   }
 
   addBook(addBookDto: AddBookDto): Promise<Book> {
@@ -73,9 +74,9 @@ export class BooksService {
     const { bookId, userId } = returnBookDto;
     const book = await this.booksRepository.findOne({
       where: { id:bookId },
-      relations: ['issuedTo'],
+      relations: ['issuedTo'], // NOTE: this field is not required
     });
-    console.log(book);
+    console.log(book); // NOTE: remove loggin the raw data
     if (!book) {
       throw new NotFoundException(`Book with ID "${bookId}" not found`);
     }

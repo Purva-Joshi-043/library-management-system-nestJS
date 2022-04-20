@@ -6,4 +6,5 @@ export class ReturnBookDto {
 
   @IsNotEmpty()
   userId: string;
+  // NOTE: use appropriate validators
 }

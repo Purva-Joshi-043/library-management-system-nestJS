@@ -25,6 +25,7 @@ import { IssueBookDto } from './dto/issue-book.dto';
 import { ReturnBookDto } from './dto/return-book.dto';
 
 @Controller('books')
+// NOTE: Use custom guards, await before function call, readonly
 @UseGuards(AuthGuard())
 export class BooksController {
   constructor(private booksService: BooksService) {}

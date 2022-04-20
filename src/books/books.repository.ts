@@ -10,6 +10,7 @@ import { GetBookFilterDto } from "./dto/get-book-filter.dto";
 export class BooksRepository extends Repository<Book> {
   async getBooks(filterDto: GetBookFilterDto, user: User): Promise<Book[]> {
     const { genre, title, author } = filterDto;
+    // NOTE: Achieve this without the querybuilder
     const query = this.createQueryBuilder('book');
   
     if (genre) {
@@ -36,7 +37,7 @@ export class BooksRepository extends Repository<Book> {
     const book = this.create({
       title ,
       author,
-      genre:BookGenre.FANTASY,
+      genre:BookGenre.FANTASY, // NOTE: remove hard-coded value
     });
     await this.save(book);
     return book;

@@ -27,7 +27,8 @@ export class UserRepository extends Repository<User> {
     try {
       await this.save(user);
     } catch (error) {
-      console.log(error);
+      console.log(error); // NOTE: always remove this statement
+      // NOTE: for single line conditionals, remove the {}
       if (error.code === '23505') {
         //duplicate username
         throw new ConflictException('Email already exists');
